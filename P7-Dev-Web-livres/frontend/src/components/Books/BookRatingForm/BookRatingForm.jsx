@@ -28,6 +28,7 @@ function BookRatingForm({ rating, setRating, userId, setBook, id, userRated }) {
     if (!connectedUser || !auth) {
       navigate(APP_ROUTES.SIGN_IN);
     }
+
     const update = await rateBook(id, userId, rating);
     console.log(update);
     if (update) {

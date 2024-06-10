@@ -29,7 +29,7 @@ exports.login = (req, res, next) => {
         .compare(req.body.password, user.password)
         .then((valid) => {
           if (!valid) {
-            return res.status(401).json({ error: "Incorrect login -mdp" });
+            return res.status(401).json({ error: "Incorrect login" });
           }
           res.status(200).json({
             userId: user._id,
