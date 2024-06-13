@@ -13,7 +13,7 @@ mongoose
   .then(() => console.log("MongoDB - Successful connection"))
   .catch(() => console.log("MongoDB - Failed connection"));
 
-// Accepted formats
+// Accepted body formats
 app.use(express.json());
 
 // CORS Headers
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 
 // Routes usage
 app.use("/api/books", booksRoutes);
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "/images")));
 app.use("/api/auth", userRoutes);
 
 // Export app

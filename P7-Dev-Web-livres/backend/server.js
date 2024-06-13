@@ -3,9 +3,9 @@ const app = require("./app");
 
 // Setup server port & middleware
 const port = process.env.PORT || 4000;
+const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 app.set("port", port);
 const server = http.createServer(app);
-const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
 // Handle port error
 const errorPort = (error) => {
@@ -16,11 +16,9 @@ const errorPort = (error) => {
     case "EACCES":
       console.error(bind + " - Refused access");
       process.exit(1);
-      break;
     case "EADDRINUSE":
       console.error(bind + " - Already in use");
       process.exit(1);
-      break;
     default:
       throw error;
   }
