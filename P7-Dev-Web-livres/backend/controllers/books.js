@@ -49,7 +49,7 @@ exports.getBestRating = (req, res, next) => {
 exports.createBook = (req, res, next) => {
   // Error if no image
   if (!req.file) {
-    return res.status(400).json({ error: "No file uploaded or file is not an image" });
+    return res.status(400).json({ error: "No file uploaded or file is not an image in accepted format" });
   }
 
   // Parsing body

@@ -50,7 +50,7 @@ const treatingImage = (req, res, next) => {
   // const milliseconds = date.getMilliseconds().toString().padStart(3, "0");
   // const newDate = `${day}-${month}-${year}_${hours}h-${minutes}m-${seconds}s-${milliseconds}ms`;
 
-  // const newFileName = fileName.replace(/\s+/g, "_") + "-" + newDate;
+  // const newFileName = fileName.replace(/\s+/g, "-") + "_" + newDate;
 
   const newFileName = Date.now() + "_" + fileName.replace(/\s+/g, "-");
 
@@ -66,6 +66,7 @@ const treatingImage = (req, res, next) => {
       if (error) {
         return next(error);
       }
+      // Set new name in request file
       req.file.filename = newFileName + ".webp";
       next();
     });
