@@ -74,7 +74,7 @@ exports.createBook = (req, res, next) => {
     const filePath = path.join(__dirname, "../images", req.file.filename);
     fs.unlink(filePath, (error) => {
       if (error) {
-        return res.status(500).json({ error: "An error occurred while deleting the image" });
+        return res.status(500).json({ error: "An error occurred while deleting the uploaded image" });
       }
     });
     return res.status(400).json({ error: validationError.message });
@@ -89,7 +89,7 @@ exports.createBook = (req, res, next) => {
       const filePath = path.join(__dirname, "../images", req.file.filename);
       fs.unlink(filePath, (error) => {
         if (error) {
-          return res.status(500).json({ error: "An error occurred while deleting the image" });
+          return res.status(500).json({ error: "An error occurred while deleting the uploaded image" });
         }
       });
       res.status(500).json({ error });
@@ -144,10 +144,9 @@ exports.modifyBook = (req, res, next) => {
       }
     : { ...req.body };
 
-  const bookInstance = new Books(bookObject);
-
   // Validate book inputs
   const fieldsToValidate = ["title", "author", "year", "genre"];
+  const bookInstance = new Books(bookObject);
   let validationError = "";
 
   for (const field of fieldsToValidate) {
@@ -163,7 +162,7 @@ exports.modifyBook = (req, res, next) => {
       const filePath = path.join(__dirname, "../images", req.file.filename);
       fs.unlink(filePath, (error) => {
         if (error) {
-          return res.status(500).json({ error: "An error occurred while deleting the image" });
+          return res.status(500).json({ error: "An error occurred while deleting the uploaded image" });
         }
       });
     }
@@ -191,7 +190,7 @@ exports.modifyBook = (req, res, next) => {
               const oldFileName = book.imageUrl.split("/images/")[1];
               fs.unlink(`images/${oldFileName}`, (error) => {
                 if (error) {
-                  return res.status(500).json({ error: "An error occurred while deleting the image" });
+                  return res.status(500).json({ error: "An error occurred while deleting the original image" });
                 }
               });
             }
@@ -206,7 +205,7 @@ exports.modifyBook = (req, res, next) => {
         const filePath = path.join(__dirname, "../images", req.file.filename);
         fs.unlink(filePath, (error) => {
           if (error) {
-            return res.status(500).json({ error: "An error occurred while deleting the image" });
+            return res.status(500).json({ error: "An error occurred while deleting the uploaded image" });
           }
         });
       }

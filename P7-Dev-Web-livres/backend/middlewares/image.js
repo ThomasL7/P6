@@ -23,14 +23,17 @@ const storage = multer.memoryStorage();
 // Check image (max size & type) & store it in memory
 const checkImage = multer({
   storage: storage,
-  // limits: {
-  //   fileSize: 2000000,
-  // },
   fileFilter: (req, file, cb) => {
     // Check type of image
     if (!AUTH_MIME_TYPES[file.mimetype]) {
-      return cb(new Error("Invalid image file type"));
+      req.fileValidationError = "Invalid image file type";
+      return cb(null, false);
     }
+    // Check size of image
+    // if (file.size > 2000000) {
+    //   req.fileValidationError = "Uploaded image size is too large";
+    //   return cb(null, false);
+    // }
     cb(null, true);
   },
 }).single("image");
@@ -39,7 +42,6 @@ const checkImage = multer({
 const treatingImage = (req, res, next) => {
   // Set file name & extension
   const fileName = req.file.originalname.slice(0, req.file.originalname.lastIndexOf("."));
-
   const newFileName = Date.now() + "_" + fileName.replace(/\s+/g, "-");
 
   // Resize, convert, compress image
@@ -52,7 +54,7 @@ const treatingImage = (req, res, next) => {
     // Save image in directory
     .toFile(path.join(directory, newFileName + ".webp"), (error) => {
       if (error) {
-        return next(error);
+        return res.status(500).json({ error: "An error occurred while saving the uploaded image" });
       }
       // Set new name in request file
       req.file.filename = newFileName + ".webp";
@@ -62,20 +64,26 @@ const treatingImage = (req, res, next) => {
 
 // Combined middlewares
 const processImage = (req, res, next) => {
-  checkImage(req, res, (error) => {
-    // Return an error if invalid file type
-    if (error) {
-      return res.status(400).json({ message: error.message });
-    }
-
-    // If no file found, it will continue the request (for PUT request without modifying image)
-    if (!req.file) {
-      return next();
-    }
-
-    // Processing image file if valid image
-    treatingImage(req, res, next);
-  });
+  try {
+    checkImage(req, res, (error) => {
+      // If an error occur with multer
+      if (error) {
+        return res.status(400).json({ error });
+      }
+      // Return an error if invalid file type
+      if (req.fileValidationError) {
+        return res.status(400).json({ error: req.fileValidationError });
+      }
+      // If no file found, it will continue the request (for PUT request without modifying image)
+      if (!req.file) {
+        return next();
+      }
+      // Processing image file if valid image
+      treatingImage(req, res, next);
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 module.exports = {
