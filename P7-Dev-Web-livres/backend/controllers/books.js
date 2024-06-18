@@ -180,7 +180,7 @@ exports.modifyBook = (req, res, next) => {
       }
       // Check if logged user is the one who create the book
       if (book.userId !== req.auth.userId) {
-        res.status(401).json({ error: "Not authorized" });
+        res.status(403).json({ error: "Not authorized" });
       } else {
         // Update DB book
         Books.updateOne({ _id: req.params.id }, { ...bookObject, _id: req.params.id })
@@ -220,7 +220,7 @@ exports.deleteBook = (req, res, next) => {
     .then((book) => {
       // Check if logged user is the one who create the book
       if (book.userId !== req.auth.userId) {
-        res.status(401).json({ error: "Not authorized" });
+        res.status(403).json({ error: "Not authorized" });
       } else {
         // Get image name to delete it
         const fileName = book.imageUrl.split("/images/")[1];

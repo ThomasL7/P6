@@ -68,7 +68,7 @@ const processImage = (req, res, next) => {
     checkImage(req, res, (error) => {
       // If an error occur with multer
       if (error) {
-        return res.status(400).json({ error });
+        return res.status(500).json({ error });
       }
       // Return an error if invalid file type
       if (req.fileValidationError) {
